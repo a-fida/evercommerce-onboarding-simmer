@@ -152,12 +152,12 @@
 
   .counter-badge{
     margin:18px auto 0;
-    display:inline-flex;align-items:center;gap:8px;
+    display:inline-flex;align-items:center;gap:10px;
     background:var(--green-light);
     color:var(--green);
-    padding:7px 14px 7px 7px;
+    padding:9px 18px 9px 9px;
     border-radius:999px;
-    font-size:13px;
+    font-size:15px;
     font-weight:600;
     align-self:center;
     transition:opacity .2s;
@@ -168,12 +168,12 @@
   }
   .counter-thumbs{display:flex;flex:none;}
   .counter-thumbs span{
-    width:24px;height:24px;border-radius:50%;
+    width:30px;height:30px;border-radius:50%;
     background:#fff;
     display:flex;align-items:center;justify-content:center;
-    font-size:12px;
+    font-size:14px;
     border:2px solid var(--green-light);
-    margin-left:-9px;
+    margin-left:-11px;
     box-shadow:0 1px 2px rgba(0,0,0,0.08);
     overflow:hidden;
   }
@@ -198,6 +198,19 @@
     cursor:pointer;
     transition:background .15s, opacity .15s;
   }
+  .tertiary-btn{
+    display:block;
+    margin:16px auto 0;
+    background:none;
+    border:none;
+    color:var(--terracotta-dark);
+    font-size:13.5px;
+    font-weight:600;
+    text-decoration:underline;
+    text-underline-offset:2px;
+    cursor:pointer;
+  }
+  .tertiary-btn:hover{color:var(--terracotta);}
   .primary-btn:disabled{background:#E3D9CB;color:#B0A794;cursor:not-allowed;}
   .primary-btn:not(:disabled):hover{background:var(--terracotta-dark);}
   .ghost-link{
@@ -227,11 +240,23 @@
   }
 
   .reveal-head{margin-top:6px;}
+  .reveal-benefits{
+    display:flex;flex-wrap:wrap;
+    gap:8px 14px;
+    margin-top:10px;
+  }
+  .reveal-benefits span{
+    font-size:14.5px;font-weight:600;
+    color:var(--ink);
+  }
   .recipe-card{
     border:1.5px solid var(--line);
     border-radius:16px;
     padding:12px;
     margin-top:14px;
+  }
+  .recipe-card.expanded{
+    padding-bottom:18px;
   }
   .recipe-photo{
     width:76px;height:76px;border-radius:14px;
@@ -284,7 +309,7 @@
 
   .recipe-day{
     margin-top:10px;
-    padding-top:10px;
+    padding-top:14px;
     border-top:1px solid var(--line);
   }
   .recipe-day .day-label{
@@ -300,6 +325,16 @@
     cursor:pointer;
     user-select:none;
   }
+  #reminderRow .reminder-check{
+    background:#F1EFEA;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+    transition:background .2s, border-color .2s;
+  }
+  #reminderRow .reminder-check.checked{
+    background:var(--green-light);
+  }
   .modal-notif-check{
     align-items:flex-start;
     text-align:left;
@@ -312,6 +347,9 @@
     cursor:pointer;
     flex:none;
   }
+  #reminderRow .reminder-check input{
+    accent-color:var(--green);
+  }
   .confirm-box{
     margin-top:8px;
     background:var(--green-light);
@@ -321,7 +359,11 @@
     color:#2f4f38;
     line-height:1.45;
   }
-  .grocery-ready{font-weight:600;margin-bottom:7px;}
+  .grocery-ready-row{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px;
+  }
+  .grocery-ready{font-weight:600;}
   .grocery-loading{display:flex;align-items:center;font-weight:600;color:#2f4f38;}
   .spinner{
     display:inline-block;
@@ -397,6 +439,29 @@
   @keyframes s-pop{ 0%{transform:scale(0.4);opacity:0;} 60%{transform:scale(1.08);opacity:1;} 100%{transform:scale(1);opacity:1;} }
   .modal-success-text{font-size:16px;font-weight:800;margin:0 0 4px;}
   .modal-success-sub{font-size:13px;color:var(--muted);margin:0;}
+  .modal-next-steps{
+    margin-top:16px;
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px 14px;
+    text-align:left;
+  }
+  .modal-next-steps-title{font-size:13.5px;font-weight:700;color:var(--ink);margin:0 0 6px;}
+  .modal-next-steps-label{font-size:12px;color:var(--muted);margin:0 0 8px;}
+  .modal-next-steps-list{list-style:none;margin:0;padding:0;}
+  .modal-next-steps-list li{
+    display:flex;align-items:center;gap:9px;
+    font-size:12.5px;color:var(--ink);
+    margin-bottom:8px;
+  }
+  .modal-next-steps-list li:last-child{margin-bottom:0;}
+  .unchecked-box{
+    width:14px;height:14px;flex:none;
+    border:1.5px solid var(--muted);
+    border-radius:4px;
+    box-sizing:border-box;
+  }
   .modal-demo-note{
     margin-top:16px;
     background:var(--cream);
@@ -420,6 +485,8 @@
     padding:6px 12px;
     border-radius:8px;
     cursor:pointer;
+    flex:none;
+    white-space:nowrap;
   }
 </style>
 </head>
@@ -493,8 +560,10 @@
   <div class="screen" id="screen-5">
     <h1 class="reveal-head" id="revealHeadline" style="font-size:21px;"></h1>
     <p class="sub" id="revealSubtitle" style="margin-top:2px;"></p>
+    <div class="reveal-benefits" id="revealBenefits"></div>
     <div id="relaxNote5" class="relax-note"></div>
     <div id="recipeList"></div>
+    <button class="tertiary-btn" onclick="goTo(4)">View more Recipes</button>
   </div>
 </div>
 
@@ -527,6 +596,16 @@
       <div class="modal-demo-note" id="modalDemoNote" style="display:none;">
         <p class="modal-demo-note-text">For demo purposes, since the recipe pages haven't been mocked up yet, you'll be taken back to the "Your recipes to try" screen. Explore the Save functionality next.</p>
         <button class="modal-btn email-btn" onclick="closeAccountModal()">Continue</button>
+      </div>
+      <div class="modal-next-steps" id="modalNextSteps" style="display:none;">
+        <p class="modal-next-steps-title">Great choice! Let's make it happen.</p>
+        <p class="modal-next-steps-label">Next steps:</p>
+        <ul class="modal-next-steps-list">
+          <li><span class="unchecked-box"></span>Pick a day to cook</li>
+          <li><span class="unchecked-box"></span>Get a tailored grocery list</li>
+          <li><span class="unchecked-box"></span>Set a reminder</li>
+        </ul>
+        <button class="modal-btn email-btn" style="margin-top:12px;" onclick="closeAccountModal()">Continue</button>
       </div>
     </div>
   </div>
@@ -703,7 +782,7 @@ function renderReminder(){
     return;
   }
   el.innerHTML = `
-    <label class="reminder-check">
+    <label class="reminder-check ${state.reminder ? 'checked' : ''}">
       <input type="checkbox" id="reminderCheckbox" ${state.reminder ? 'checked' : ''} onchange="toggleReminder()">
       <span>Remind me before I cook ${state.day.toLowerCase()}</span>
     </label>
@@ -712,6 +791,7 @@ function renderReminder(){
 
 function toggleReminder(){
   state.reminder = document.getElementById('reminderCheckbox').checked;
+  document.getElementById('reminderCheckbox').closest('.reminder-check').classList.toggle('checked', state.reminder);
 }
 
 function toggleNotif(){
@@ -736,9 +816,13 @@ function renderConfirmBox(){
   if(!state.groceryReady){
     box.innerHTML = `<div class="grocery-loading"><span class="spinner"></span>We're generating your grocery list…</div>`;
   } else {
+    const daySuffix = { 'Today':'for today', 'Tomorrow':'for tomorrow', 'This week':'for this week' }[state.day] || '';
+    const readyText = daySuffix ? `Your grocery list is ready ${daySuffix}` : 'Your grocery list is ready';
     box.innerHTML = `
-      <div class="grocery-ready">✅ Your grocery list is ready</div>
-      <button class="view-grocery-btn">View grocery list</button>
+      <div class="grocery-ready-row">
+        <div class="grocery-ready">${readyText}</div>
+        <button class="view-grocery-btn">View grocery list</button>
+      </div>
     `;
   }
 }
@@ -845,7 +929,12 @@ function photoColor(title){
 
 function renderReveal(){
   document.getElementById('revealHeadline').textContent = "Your first recipe picks, made for you";
-  document.getElementById('revealSubtitle').textContent = "We've narrowed it down to 3 recipes based on your preferences. Ready to get cooking?";
+  document.getElementById('revealSubtitle').textContent = "We found 3 recipes that fit your skill, time, and preferences. Save a recipe to unlock everything you need for your first cook:";
+  document.getElementById('revealBenefits').innerHTML = `
+    <span>🛒 Tailored grocery list</span>
+    <span>📅 Plan your cook</span>
+    <span>🔔 Set reminders</span>
+  `;
 
   const {matches, relaxed} = computeMatches();
   document.getElementById('relaxNote5').textContent = relaxed
@@ -864,7 +953,7 @@ function renderReveal(){
 
   top3.forEach((r,idx)=>{
     const card=document.createElement('div');
-    card.className='recipe-card';
+    card.className='recipe-card' + (idx===dayCardIdx ? ' expanded' : '');
     const isSaved = state.saved.includes(r.title);
     const photoStyle = RECIPE_IMAGES[r.title]
       ? `background-image:url('${RECIPE_IMAGES[r.title]}')`
@@ -947,7 +1036,9 @@ function completeSave(){
   } else {
     document.getElementById('modalSuccessText').textContent = "You're all set!";
     document.getElementById('modalSuccessSub').textContent = 'Recipe saved to your account.';
-    setTimeout(closeAccountModal, 1000);
+    setTimeout(()=>{
+      document.getElementById('modalNextSteps').style.display='block';
+    }, 700);
   }
 }
 
@@ -962,6 +1053,7 @@ function closeAccountModal(){
   document.getElementById('modalForm').style.display='block';
   document.getElementById('modalSuccess').style.display='none';
   document.getElementById('modalDemoNote').style.display='none';
+  document.getElementById('modalNextSteps').style.display='none';
   renderReveal();
 }
 
